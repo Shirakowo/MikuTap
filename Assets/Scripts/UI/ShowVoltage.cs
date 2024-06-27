@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class Stage : MonoBehaviour
+public class ShowVoltage : MonoBehaviour
 {
-    public static int stage;
+    public TMP_Text VoltShow;
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +16,6 @@ public class Stage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        VoltShow.text = Voltage.voltage.ToString();
     }
 }
