@@ -9,8 +9,8 @@
 /[Uu]ser[Ss]ettings/
 /[Mm]emoryCaptures/
 /[Rr]ecordings/
-/[Aa]ssets/Plugins/Editor/JetBrains*
-/Assets/TextMesh Pro
+/Assets/TextMesh Pro/
+/MikuTap_BurstDebugInformation_DoNotShip/
 
 .vs/
 .gradle/
