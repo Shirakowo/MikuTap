@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TapVoltage : MonoBehaviour
 {
-    public static BigInteger tapVoltage;
+    public static BigInteger tapVoltage = 1;
     
     // Start is called before the first frame update
     void Start()
