@@ -8,6 +8,7 @@ public class MusicPlayer : MonoBehaviour
     public AudioClip[] MusicTracks;
     public AudioSource AudioSource;
     public TMP_Text MusicLabel;
+    public int RandomIndex;
 
     // Start is called before the first frame update
     void Start()
@@ -22,16 +23,28 @@ public class MusicPlayer : MonoBehaviour
         
     }
 
-    private void PlayRandomTrack()
+    void PlayRandomTrack()
     {
-        int RandomIndex = Random.Range(0, MusicTracks.Length);
-        string AudioName = AudioSource.clip.name;
+        RandomIndex = Random.Range(0, MusicTracks.Length);
 
         AudioSource.clip = MusicTracks[RandomIndex];
         AudioSource.Play();
 
-        Debug.Log($"Playing track: {AudioName}");
-        MusicLabel.text = AudioName;
+        Debug.Log($"Playing track: {AudioName()}");
+        MusicLabel.text = AudioName();
         Invoke(nameof(PlayRandomTrack), AudioSource.clip.length);
+    }
+
+    string AudioName() {
+        return (RandomIndex + 1) switch
+        {
+            1 => "Strawberry Life",
+            2 => "Demi-Dialection!!",
+            3 => "Happy Birthday",
+            4 => "Happy Tuning!",
+            5 => "SHAPE",
+            6 => "Starmine",
+            _ => null,
+        };
     }
 }
