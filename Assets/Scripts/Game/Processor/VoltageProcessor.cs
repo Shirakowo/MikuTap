@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class VoltageProcessor : MonoBehaviour
 {
+    public TMP_Text VoltageShow;
+    public int Voltage;
+    public int TapVoltage;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,7 +22,7 @@ public class VoltageProcessor : MonoBehaviour
     {
         if (Input.GetMouseButtonDown((int)MouseButton.Left))
         {
-            Voltage.voltage += TapVoltage.tapVoltage;
+            Voltage += TapVoltage;
         }
 
         if (Input.touchCount > 0)
@@ -25,8 +30,10 @@ public class VoltageProcessor : MonoBehaviour
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Began)
             {
-                Voltage.voltage += TapVoltage.tapVoltage;
+                Voltage += TapVoltage;
             }
         }
+
+        VoltageShow.text = Voltage.ToString();
     }
 }
