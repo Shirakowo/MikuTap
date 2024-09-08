@@ -6,8 +6,10 @@ using UnityEngine.UI;
 
 public class Processor : MonoBehaviour
 {
-    public double voltage;
     public AudioClip[] audioTracks;
+    public double voltage;
+    public double tapVoltage;
+    public int mikuLevel = 1;
     AudioSource audioSource;
     Text Tv;
 
@@ -19,15 +21,8 @@ public class Processor : MonoBehaviour
 
         Tv = GameObject.Find("Rx 1").GetComponent<Text>();
 
-        if (PlayerPrefs.HasKey("Voltage"))
-        {
-            voltage = PlayerPrefs.GetFloat("Voltage");
-        }
-        else
-        {
-            PlayerPrefs.SetFloat("Voltage", 0);
-            voltage = 0;
-        }
+        voltage = PlayerPrefs.GetFloat("Voltage", 0);
+        mikuLevel = PlayerPrefs.GetInt("Miku", 1);
     }
 
     // Update is called once per frame
@@ -38,7 +33,9 @@ public class Processor : MonoBehaviour
             Tap();
         }
 
-        Tv.text = voltage.ToString();
+        tapVoltage = mikuLevel * 1.2;
+
+        Tv.text = Mathf.Round((float)voltage).ToString();
         PlayerPrefs.SetFloat("Voltage", (float)voltage);
     }
 
@@ -56,6 +53,6 @@ public class Processor : MonoBehaviour
 
     void Tap()
     {
-        voltage += 1;
+        voltage += tapVoltage;
     }
 }
