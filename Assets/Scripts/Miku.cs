@@ -37,26 +37,17 @@ public class Miku : MonoBehaviour
 
     void OnMouseDown()
     {
-
+        GetComponent<SpriteRenderer>().color = Processor.NewColor(128, 10, 64);
     }
 
     void OnMouseUp()
     {
+        GetComponent<SpriteRenderer>().color = Processor.NewColor(255, 128, 200);
         if (canUpgrade)
         {
             Processor.instance.power -= powerNeed;
             level += 1;
             canUpgrade = false;
         }
-    }
-
-    void OnMouseOver()
-    {
-        GetComponent<SpriteRenderer>().color = Processor.NewColor(128, 10, 64);
-    }
-
-    void OnMouseExit()
-    {
-        GetComponent<SpriteRenderer>().color = Processor.NewColor(255, 128, 200);
     }
 }
