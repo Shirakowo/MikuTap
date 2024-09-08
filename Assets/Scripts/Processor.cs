@@ -6,37 +6,34 @@ using UnityEngine.UI;
 
 public class Processor : MonoBehaviour
 {
+    public static Processor instance;
     public AudioClip[] audioTracks;
+    public double power;
     public double voltage;
     public double tapVoltage;
-    public int mikuLevel = 1;
     AudioSource audioSource;
-    Text Tv;
 
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
+
+        PlayerPrefs.DeleteAll();
+
+        power = PlayerPrefs.GetFloat("Power", 0);
+
         audioSource = GetComponent<AudioSource>();
         PlayRandomTrack();
-
-        Tv = GameObject.Find("Rx 1").GetComponent<Text>();
-
-        voltage = PlayerPrefs.GetFloat("Voltage", 0);
-        mikuLevel = PlayerPrefs.GetInt("Miku", 1);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.anyKeyDown)
-        {
-            Tap();
-        }
+        tapVoltage = Miku.miku.level * 1.2f;
 
-        tapVoltage = mikuLevel * 1.2;
-
-        Tv.text = Mathf.Round((float)voltage).ToString();
-        PlayerPrefs.SetFloat("Voltage", (float)voltage);
+        GameObject.Find("Rx Power").GetComponent<Text>().text = Mathf.Round((float)power).ToString();
+        GameObject.Find("Rx Volt").GetComponent<Text>().text = Mathf.Round((float)voltage).ToString();
+        PlayerPrefs.SetFloat("Power", (float)power);
     }
 
     void PlayRandomTrack()
@@ -51,8 +48,29 @@ public class Processor : MonoBehaviour
         Invoke(nameof(PlayRandomTrack), audioSource.clip.length);
     }
 
-    void Tap()
+    /// <summary>
+    /// Return new Color components with RGB and A set to 255
+    /// </summary>
+    public static Color NewColor(int r, int g, int b)
+    {
+        return new Color(r/255f, g/255f, b/255f, 1f);
+    }
+
+    /// <summary>
+    /// Return new Color components with RGBA
+    /// </summary>
+    public static Color NewColor(int r, int g, int b, int a)
+    {
+        return new Color(r/255f, g/255f, b/255f, a/255f);
+    }
+
+    public void Tap()
     {
         voltage += tapVoltage;
+        if (voltage >= 20)
+        {
+            voltage = 0;
+            power += 1;
+        }
     }
 }
