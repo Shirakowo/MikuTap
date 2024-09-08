@@ -11,6 +11,10 @@ public class Processor : MonoBehaviour
     public double power;
     public double voltage;
     public double tapVoltage;
+    public double voltageToNext = 20;
+    public int stage;
+    public int concert;
+    public bool superConcert;
     AudioSource audioSource;
 
     // Start is called before the first frame update
@@ -21,6 +25,7 @@ public class Processor : MonoBehaviour
         PlayerPrefs.DeleteAll();
 
         power = PlayerPrefs.GetFloat("Power", 0);
+        stage = PlayerPrefs.GetInt("Stage", 1);
 
         audioSource = GetComponent<AudioSource>();
         PlayRandomTrack();
@@ -33,14 +38,40 @@ public class Processor : MonoBehaviour
 
         GameObject.Find("Rx Power").GetComponent<Text>().text = Mathf.Round((float)power).ToString();
         GameObject.Find("Rx Volt").GetComponent<Text>().text = Mathf.Round((float)voltage).ToString();
+
         PlayerPrefs.SetFloat("Power", (float)power);
+        PlayerPrefs.SetInt("Stage", stage);
+
+        /*
+        SetActiveBlock(1);
+        SetActiveBlock(2);
+        SetActiveBlock(3);
+        SetActiveBlock(4);
+        SetActiveBlock(5);
+        SetActiveBlock(6);
+        SetActiveBlock(7);
+        SetActiveBlock(8);
+        SetActiveBlock(9);
+        */
     }
 
-    void PlayRandomTrack()
+    public void SetActiveBlock(int block)
     {
-        int randomIndex;
+        GameObject blk = GameObject.Find($"Square {block}");
 
-        randomIndex = Random.Range(0, audioTracks.Length);
+        if (voltage >= voltageToNext / 9 * block)
+        {
+            blk.SetActive(true);
+        }
+        else
+        {
+            blk.SetActive(false);
+        }
+    }
+
+    public void PlayRandomTrack()
+    {
+        int randomIndex = Random.Range(0, audioTracks.Length);
 
         audioSource.clip = audioTracks[randomIndex];
         audioSource.Play();
@@ -67,10 +98,19 @@ public class Processor : MonoBehaviour
     public void Tap()
     {
         voltage += tapVoltage;
-        if (voltage >= 20)
+
+        if (voltage >= voltageToNext)
         {
+            voltageToNext = CalculateVoltageToNext(10);
             voltage = 0;
             power += 1;
         }
     }
+
+    public double CalculateVoltageToNext(double baseVoltage)
+    {
+        return baseVoltage * (Random.value + 1);
+    }
+
+    
 }
