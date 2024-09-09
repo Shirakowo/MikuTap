@@ -14,6 +14,7 @@ public class Processor : MonoBehaviour
     public double voltageToNext = 20;
     public int stage;
     public int concert;
+    public int concertToSuper = 10;
     public bool superConcert;
     AudioSource audioSource;
 
@@ -38,35 +39,10 @@ public class Processor : MonoBehaviour
 
         GameObject.Find("Rx Power").GetComponent<Text>().text = Mathf.Round((float)power).ToString();
         GameObject.Find("Rx Volt").GetComponent<Text>().text = Mathf.Round((float)voltage).ToString();
+        GameObject.Find("Rx Concert").GetComponent<Text>().text = $"{concert}/{concertToSuper}";
 
         PlayerPrefs.SetFloat("Power", (float)power);
         PlayerPrefs.SetInt("Stage", stage);
-
-        /*
-        SetActiveBlock(1);
-        SetActiveBlock(2);
-        SetActiveBlock(3);
-        SetActiveBlock(4);
-        SetActiveBlock(5);
-        SetActiveBlock(6);
-        SetActiveBlock(7);
-        SetActiveBlock(8);
-        SetActiveBlock(9);
-        */
-    }
-
-    public void SetActiveBlock(int block)
-    {
-        GameObject blk = GameObject.Find($"Square {block}");
-
-        if (voltage >= voltageToNext / 9 * block)
-        {
-            blk.SetActive(true);
-        }
-        else
-        {
-            blk.SetActive(false);
-        }
     }
 
     public void PlayRandomTrack()
@@ -101,16 +77,38 @@ public class Processor : MonoBehaviour
 
         if (voltage >= voltageToNext)
         {
-            voltageToNext = CalculateVoltageToNext(10);
+            if (superConcert)
+            {
+                superConcert = false;
+                concert = 0;
+                stage++;
+                CalculateVoltageToNext();
+            }
+
+            if (concert == concertToSuper - 1)
+            {
+                CalculateVoltageSuperCon();
+                superConcert = true;
+            }
+            else
+            {
+                CalculateVoltageToNext();
+                concert++;
+            }
+            
             voltage = 0;
             power += 1;
+            
         }
     }
 
-    public double CalculateVoltageToNext(double baseVoltage)
+    public void CalculateVoltageToNext()
     {
-        return baseVoltage * (Random.value + 1);
+        voltageToNext = 20 * Random.Range(0.5f, 2.5f) * stage;
     }
 
-    
+    public void CalculateVoltageSuperCon()
+    {
+        voltageToNext = 128 * Random.Range(0.75f, 3.5f) * (stage / 1.25);
+    }
 }
