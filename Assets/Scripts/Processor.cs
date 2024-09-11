@@ -35,11 +35,14 @@ public class Processor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        tapVoltage = Miku.miku.level * 1.2f;
+        tapVoltage = Mathf.Floor(Miku.miku.level * 1.2f);
 
         GameObject.Find("Rx Power").GetComponent<Text>().text = Mathf.Round((float)power).ToString();
         GameObject.Find("Rx Volt").GetComponent<Text>().text = Mathf.Round((float)voltage).ToString();
         GameObject.Find("Rx Concert").GetComponent<Text>().text = $"{concert}/{concertToSuper}";
+        GameObject.Find("Rx Stage 0").GetComponent<Text>().text = $"{stage}";
+        GameObject.Find("Rx Stage -1").GetComponent<Text>().text = $"{stage - 1}";
+        GameObject.Find("Rx Stage +1").GetComponent<Text>().text = $"{stage + 1}";
 
         PlayerPrefs.SetFloat("Power", (float)power);
         PlayerPrefs.SetInt("Stage", stage);
@@ -84,31 +87,33 @@ public class Processor : MonoBehaviour
                 stage++;
                 CalculateVoltageToNext();
             }
+            else
+            {
+                power += 1 * Mathf.Round(stage / 2);
+            }
 
-            if (concert == concertToSuper - 1)
+            if (concert == concertToSuper)
             {
                 CalculateVoltageSuperCon();
                 superConcert = true;
             }
             else
             {
-                CalculateVoltageToNext();
                 concert++;
             }
             
             voltage = 0;
-            power += 1;
             
         }
     }
 
     public void CalculateVoltageToNext()
     {
-        voltageToNext = 20 * Random.Range(0.5f, 2.5f) * stage;
+        voltageToNext = 20 * Random.Range(0.5f, 1.5f) * stage;
     }
 
     public void CalculateVoltageSuperCon()
     {
-        voltageToNext = 128 * Random.Range(0.75f, 3.5f) * (stage / 1.25);
+        voltageToNext = 128 * Random.Range(0.75f, 2f) * (stage / 1.25);
     }
 }
