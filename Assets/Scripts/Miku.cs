@@ -15,21 +15,19 @@ public class Miku : MonoBehaviour
     {
         miku = this;
 
-        PlayerPrefs.DeleteAll();
-
         level = PlayerPrefs.GetInt("Miku", 1);
     }
 
     // Update is called once per frame
     void Update()
     {
-        powerNeed = 5 + 1.2 * (level - 1);
+        powerNeed = Mathf.Floor(5f + 1.2f * (level - 1f));
         if (Processor.instance.power >= powerNeed)
         {
             canUpgrade = true;
         }
 
-        GameObject.Find("Rx Miku 1").GetComponent<Text>().text = Mathf.Round((float)powerNeed).ToString();
+        GameObject.Find("Rx Miku 1").GetComponent<Text>().text = powerNeed.ToString();
         GameObject.Find("Rx Miku 4").GetComponent<Text>().text = $"Lv. {level}";
 
         PlayerPrefs.SetInt("Miku", level);
